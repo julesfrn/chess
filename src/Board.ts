@@ -128,6 +128,27 @@ export default class Board {
           coordinatesArray.push(this.getSquareFromCoordinates({ column: index, row: squareCoordinates.row }))
         }
       }
+    } else {
+      console.log(
+        secondSquare.name,
+        squareCoordinates.row - secondSquareCoordinates.row,
+        squareCoordinates.column - secondSquareCoordinates.column
+      )
+      let rowIndex = squareCoordinates.row
+      let columnIndex = squareCoordinates.column
+      if (squareCoordinates.column < secondSquareCoordinates.column) {
+        while (columnIndex < secondSquareCoordinates.column) {
+          columnIndex++
+          rowIndex = squareCoordinates.row < secondSquareCoordinates.row ? rowIndex + 1 : rowIndex - 1
+          coordinatesArray.push(this.getSquareFromCoordinates({ column: columnIndex, row: rowIndex }))
+        }
+      } else {
+         while (columnIndex > secondSquareCoordinates.column) {
+           columnIndex--
+           rowIndex = squareCoordinates.row < secondSquareCoordinates.row ? rowIndex + 1 : rowIndex - 1
+           coordinatesArray.push(this.getSquareFromCoordinates({ column: columnIndex, row: rowIndex }))
+         }
+      }
     }
     return coordinatesArray
   }
