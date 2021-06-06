@@ -23,7 +23,8 @@ export default class King extends Piece {
       : 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/bk.png'
   }
 
-  public isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
+  public isAllowedToMoveTo(_currentSquare: ISquare, newSquare: ISquare, _board: Board): boolean {
+    if (newSquare.piece?.color === this.color) return false
     return true
   }
 }
