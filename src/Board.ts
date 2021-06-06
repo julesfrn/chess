@@ -115,6 +115,19 @@ export default class Board {
           coordinatesArray.push(this.getSquareFromCoordinates({ row: index, column: squareCoordinates.column }))
         }
       }
+    } else if (squareCoordinates.row === secondSquareCoordinates.row) {
+      let index = squareCoordinates.column
+      if (squareCoordinates.column < secondSquareCoordinates.column) {
+        while (index < secondSquareCoordinates.column) {
+          index++
+          coordinatesArray.push(this.getSquareFromCoordinates({ column: index, row: squareCoordinates.row }))
+        }
+      } else {
+        while (index > secondSquareCoordinates.column) {
+          index--
+          coordinatesArray.push(this.getSquareFromCoordinates({ column: index, row: squareCoordinates.row }))
+        }
+      }
     }
     return coordinatesArray
   }
