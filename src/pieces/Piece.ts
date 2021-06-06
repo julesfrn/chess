@@ -53,7 +53,8 @@ export default abstract class Piece {
           : null
         return currentSquare.piece.color === color.WHITE ? whiteMove : blackMove
       })
-      .filter((square: ISquare | undefined): ISquare => square)
+      .filter(Boolean)
+      .filter((square: ISquare): boolean => this.isAllowedToMoveTo(currentSquare, square, board))
       .forEach((square: ISquare) => {
         document.getElementById(square.name).classList.add('canGoToThisSquare')
         document.getElementById(square.name).setAttribute('clickable', '')

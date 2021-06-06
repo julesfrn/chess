@@ -1,3 +1,4 @@
+import Board, { ISquare } from '../Board'
 import Piece, { color, pieceName } from './Piece'
 
 export default class Bishop extends Piece {
@@ -40,5 +41,9 @@ export default class Bishop extends Piece {
     return this.color === color.WHITE
       ? 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/wb.png'
       : 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/bb.png'
+  }
+
+  public isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
+    return true
   }
 }

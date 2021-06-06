@@ -55,9 +55,13 @@ export default class Board {
     return { row: rowIndex, column: columnIndex }
   }
 
-  getSquare(squareName: ISquare['name']): ISquare {
+  getSquareFromCoordinates({ row, column }: { row: number; column: number }): ISquare {
+    return this.squares[row][column]
+  }
+
+  getSquareFromName(squareName: ISquare['name']): ISquare {
     const squareCoordinates = this.getSquareCoordinates(squareName)
-    return this.squares[squareCoordinates.row][squareCoordinates.column]
+    return this.getSquareFromCoordinates(squareCoordinates)
   }
 
   public setSquareWithPawnsClickable(): void {
@@ -84,7 +88,7 @@ export default class Board {
     })
     document.querySelectorAll('.canGoToThisSquare').forEach((element) => element.classList.remove('canGoToThisSquare'))
     const squareName: ISquare['name'] = (event.target as any).id
-    const square: ISquare = this.getSquare(squareName)
+    const square: ISquare = this.getSquareFromName(squareName)
     if ((square.piece && this.selectedSquare === null) || (square.piece && square.piece?.color === this.turn)) {
       square.piece.showAvailableMoves(this, square)
       this.selectedSquare = square
@@ -92,5 +96,26 @@ export default class Board {
       this.selectedSquare.piece.move(this, this.selectedSquare, square)
       this.selectedSquare = null
     }
+  }
+
+  public getSquaresBetween(square: ISquare, secondSquare: ISquare): ISquare[] {
+    const squareCoordinates = this.getSquareCoordinates(square)
+    const secondSquareCoordinates = this.getSquareCoordinates(secondSquare)
+    const coordinatesArray: ISquare[] = []
+    if (squareCoordinates.column === secondSquareCoordinates.column) {
+      let index = squareCoordinates.row
+      if (squareCoordinates.row < secondSquareCoordinates.row) {
+        while (index < secondSquareCoordinates.row) {
+          index++
+          coordinatesArray.push(this.getSquareFromCoordinates({ row: index, column: squareCoordinates.column }))
+        }
+      } else {
+        while (index > secondSquareCoordinates.row) {
+          index--
+          coordinatesArray.push(this.getSquareFromCoordinates({ row: index, column: squareCoordinates.column }))
+        }
+      }
+    }
+    return coordinatesArray
   }
 }
