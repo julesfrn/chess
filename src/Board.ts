@@ -129,11 +129,6 @@ export default class Board {
         }
       }
     } else {
-      console.log(
-        secondSquare.name,
-        squareCoordinates.row - secondSquareCoordinates.row,
-        squareCoordinates.column - secondSquareCoordinates.column
-      )
       let rowIndex = squareCoordinates.row
       let columnIndex = squareCoordinates.column
       if (squareCoordinates.column < secondSquareCoordinates.column) {

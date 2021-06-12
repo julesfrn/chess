@@ -72,6 +72,17 @@ export default class Queen extends Piece {
   }
 
   public isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
-    return true
+    let isAllowedToMoveTo = true
+    const squaresBetween = board.getSquaresBetween(currentSquare, newSquare)
+    for (let i = 0; i < squaresBetween.length; i++) {
+      if (
+        squaresBetween[i].piece?.color === this.color ||
+        (squaresBetween[i - 1]?.piece && squaresBetween[i - 1].piece.color !== this.color)
+      ) {
+        isAllowedToMoveTo = false
+        break
+      }
+    }
+    return isAllowedToMoveTo
   }
 }

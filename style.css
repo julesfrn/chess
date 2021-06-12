@@ -24,7 +24,7 @@ body {
 }
 .row:nth-child(odd) .square:nth-child(even),
 .row:nth-child(even) .square:nth-child(odd) {
-  background-color: #31674A;
+  background-color: #31674a;
 }
 .row:nth-child(odd) .square:nth-child(odd),
 .row:nth-child(even) .square:nth-child(even) {
@@ -34,10 +34,10 @@ body {
   content: "";
   box-sizing: border-box;
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
+  top: 35%;
+  left: 35%;
+  height: 30%;
+  width: 30%;
   border-radius: 50%;
-  border: solid 10px rgba(0, 0, 0, .3);
+  background: rgba(0, 0, 0, .3);
 }
