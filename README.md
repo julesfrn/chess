@@ -18,7 +18,7 @@ $ npm run dev
 - [x] Interface du jeu d'échec
 - [x] Création des mouvements des pièces
 - [x] Validation des mouvements de toutes les pièces
-- [ ] Validation avancée des mouvements du roi: vérifier si il sera menacé sur la case où il veut aller
+- [x] Validation avancée des mouvements du roi: vérifier s'il sera menacé sur la case où il veut aller
 - [ ] Prise en passant
 - [ ] Roque avec validation
 - [ ] Échec et validation des mouvements pour défendre

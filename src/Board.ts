@@ -1,5 +1,6 @@
 import Piece, { color } from './pieces/Piece'
 import defaultSquare from './defaultSquare'
+import King from './pieces/King'
 
 export interface ISquare {
   piece: Piece | null
@@ -138,11 +139,11 @@ export default class Board {
           coordinatesArray.push(this.getSquareFromCoordinates({ column: columnIndex, row: rowIndex }))
         }
       } else {
-         while (columnIndex > secondSquareCoordinates.column) {
-           columnIndex--
-           rowIndex = squareCoordinates.row < secondSquareCoordinates.row ? rowIndex + 1 : rowIndex - 1
-           coordinatesArray.push(this.getSquareFromCoordinates({ column: columnIndex, row: rowIndex }))
-         }
+        while (columnIndex > secondSquareCoordinates.column) {
+          columnIndex--
+          rowIndex = squareCoordinates.row < secondSquareCoordinates.row ? rowIndex + 1 : rowIndex - 1
+          coordinatesArray.push(this.getSquareFromCoordinates({ column: columnIndex, row: rowIndex }))
+        }
       }
     }
     return coordinatesArray

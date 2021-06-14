@@ -41,9 +41,9 @@ export default abstract class Piece {
       : `${this.name === pieceName.PAWN ? newSquare.name : this.name + newSquare.name}`
   }
 
-  public showAvailableMoves(board: Board, currentSquare: ISquare): void {
+  public getAllAvailableMoves(board: Board, currentSquare: ISquare): ISquare[] {
     const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
-    this.moves
+    return this.moves
       .map((move: [number, number]): ISquare | undefined => {
         const whiteMove = board.squares[currentSquareCoordinates.row + move[0]]
           ? board.squares[currentSquareCoordinates.row + move[0]][currentSquareCoordinates.column + move[1]]
@@ -55,10 +55,13 @@ export default abstract class Piece {
       })
       .filter(Boolean)
       .filter((square: ISquare): boolean => this.isAllowedToMoveTo(currentSquare, square, board))
-      .forEach((square: ISquare) => {
-        document.getElementById(square.name).classList.add('canGoToThisSquare')
-        document.getElementById(square.name).setAttribute('clickable', '')
-      })
+  }
+
+  public showAvailableMoves(board: Board, currentSquare: ISquare): void {
+    this.getAllAvailableMoves(board, currentSquare).forEach((square: ISquare) => {
+      document.getElementById(square.name).classList.add('canGoToThisSquare')
+      document.getElementById(square.name).setAttribute('clickable', '')
+    })
     board.setSquareWithPawnsClickable()
     board.listenToClicks()
   }
