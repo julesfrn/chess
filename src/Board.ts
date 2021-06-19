@@ -1,6 +1,7 @@
 import Piece, { color } from './pieces/Piece'
 import defaultSquare from './defaultSquare'
 import King from './pieces/King'
+import Pawn from './pieces/Pawn'
 
 export interface ISquare {
   piece: Piece | null
@@ -147,5 +148,11 @@ export default class Board {
       }
     }
     return coordinatesArray
+  }
+
+  deleteEnPassantVulnerabilities() {
+    this.squares.flat().filter(square => square.piece).forEach(square => {
+      if (square.piece instanceof Pawn) square.piece.isVulnerableToEnPassant = false
+    })
   }
 }

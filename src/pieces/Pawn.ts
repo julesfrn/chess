@@ -13,6 +13,8 @@ export default class Pawn extends Piece {
     ]
   }
 
+  public isVulnerableToEnPassant: boolean = false
+
   get image(): string {
     return this.color === color.WHITE
       ? 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/wp.png'
@@ -23,6 +25,23 @@ export default class Pawn extends Piece {
     const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
     const newSquareCoordinates = board.getSquareCoordinates(newSquare)
     const isNewSquareDiagonal: boolean = currentSquareCoordinates.column - newSquareCoordinates.column !== 0
+    const isGoingRight: boolean = currentSquareCoordinates.column - newSquareCoordinates.column === -1
+    if (isNewSquareDiagonal && isGoingRight) {
+      const rightSquare = board.getSquareFromCoordinates({
+        ...currentSquareCoordinates,
+        column: currentSquareCoordinates.column + 1,
+      })
+      if (rightSquare.piece && rightSquare.piece.color !== this.color && rightSquare.piece.isVulnerableToEnPassant)
+        return true
+    }
+    const isGoingLeft: boolean = currentSquareCoordinates.column - newSquareCoordinates.column === 1
+    if (isNewSquareDiagonal && isGoingLeft) {
+      const leftSquare = board.getSquareFromCoordinates({
+        ...currentSquareCoordinates,
+        column: currentSquareCoordinates.column - 1,
+      })
+      if (leftSquare.piece && leftSquare.piece.color !== this.color && leftSquare.piece.isVulnerableToEnPassant) return true
+    }
     if (isNewSquareDiagonal && (!newSquare.piece || newSquare.piece?.color === this.color)) return false
     const isNewSquare2SquaresAway: boolean =
       currentSquareCoordinates.row - newSquareCoordinates.row === 2 ||
