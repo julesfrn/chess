@@ -1,7 +1,7 @@
 import Piece, { color } from './pieces/Piece'
 import defaultSquare from './defaultSquare'
-import King from './pieces/King'
 import Pawn from './pieces/Pawn'
+import King from './pieces/King'
 
 export interface ISquare {
   piece: Piece | null
@@ -36,10 +36,14 @@ export default class Board {
     this.listenToClicks()
   }
 
-  public renderSquares(...squares: ISquare[]) {
+  public renderSquare(square: ISquare): void {
+    let squareCoordinates = this.getSquareCoordinates(square.name)
+    this.squares[squareCoordinates.row][squareCoordinates.column] = square
+  }
+
+  public renderSquaresAndUI(...squares: ISquare[]) {
     squares.forEach((square: ISquare) => {
-      let squareCoordinates = this.getSquareCoordinates(square.name)
-      this.squares[squareCoordinates.row][squareCoordinates.column] = square
+      this.renderSquare(square)
       if (square.piece) document.getElementById(square.name).style.backgroundImage = `url(${square.piece.image})`
       else document.getElementById(square.name).removeAttribute('style')
     })
@@ -151,8 +155,23 @@ export default class Board {
   }
 
   deleteEnPassantVulnerabilities() {
-    this.squares.flat().filter(square => square.piece).forEach(square => {
-      if (square.piece instanceof Pawn) square.piece.isVulnerableToEnPassant = false
-    })
+    this.squares
+      .flat()
+      .filter((square) => square.piece)
+      .forEach((square) => {
+        if (square.piece instanceof Pawn) square.piece.isVulnerableToEnPassant = false
+      })
+  }
+
+  getEnemyKingSquare(allyColor: color): ISquare {
+    if (allyColor === color.WHITE) {
+      return this.squares.flat().find((square) => square.piece?.color === color.BLACK && square.piece instanceof King)
+    } else {
+      return this.squares.flat().find((square) => square.piece?.color === color.WHITE && square.piece instanceof King)
+    }
+  }
+
+  getAllyKingSquare(allyColor: color): ISquare {
+    return this.squares.flat().find((square) => square.piece?.color === allyColor && square.piece instanceof King)
   }
 }

@@ -1,5 +1,6 @@
 import Board, { ISquare } from '../Board'
 import Piece, { color, pieceName } from './Piece'
+import cloneDeep from 'lodash.clonedeep'
 
 export default class King extends Piece {
   constructor(color: color) {
@@ -23,6 +24,27 @@ export default class King extends Piece {
     return this.color === color.WHITE
       ? 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/wk.png'
       : 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/bk.png'
+  }
+
+  public isGoingToBeInCheckAfterMove(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
+    const currentSquareClone = cloneDeep(currentSquare)
+    const newSquareClone = cloneDeep(newSquare)
+
+    currentSquareClone.piece = null
+    newSquareClone.piece = currentSquare.piece
+
+    board.renderSquare(currentSquareClone)
+    board.renderSquare(newSquareClone)
+    let isGoingToBeInCheckAfterMove = this.aPieceThreatensThatSquare(
+      board,
+      board.getAllyKingSquare(this.color),
+      board.getAllyKingSquare(this.color)
+    )
+
+    board.renderSquare(currentSquare)
+    board.renderSquare(newSquare)
+    
+    return isGoingToBeInCheckAfterMove
   }
 
   public isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
@@ -91,7 +113,7 @@ export default class King extends Piece {
         board.getSquareFromName('f1').piece = rook
         newSquare.piece = this
         currentSquare.piece = null
-        board.renderSquares(currentSquare, newSquare, board.getSquareFromName('h1'), board.getSquareFromName('f1'))
+        board.renderSquaresAndUI(currentSquare, newSquare, board.getSquareFromName('h1'), board.getSquareFromName('f1'))
       }
       if (newSquare.name === 'c1') {
         const rook = board.getSquareFromName('a1').piece
@@ -99,7 +121,7 @@ export default class King extends Piece {
         board.getSquareFromName('d1').piece = rook
         newSquare.piece = this
         currentSquare.piece = null
-        board.renderSquares(currentSquare, newSquare, board.getSquareFromName('a1'), board.getSquareFromName('d1'))
+        board.renderSquaresAndUI(currentSquare, newSquare, board.getSquareFromName('a1'), board.getSquareFromName('d1'))
       }
     } else if (this.isMoveCastle(currentSquare, newSquare, board) && this.color === color.BLACK) {
       if (newSquare.name === 'g8') {
@@ -108,7 +130,7 @@ export default class King extends Piece {
         board.getSquareFromName('f8').piece = rook
         newSquare.piece = this
         currentSquare.piece = null
-        board.renderSquares(currentSquare, newSquare, board.getSquareFromName('h8'), board.getSquareFromName('f8'))
+        board.renderSquaresAndUI(currentSquare, newSquare, board.getSquareFromName('h8'), board.getSquareFromName('f8'))
       }
       if (newSquare.name === 'c8') {
         const rook = board.getSquareFromName('a8').piece
@@ -116,16 +138,16 @@ export default class King extends Piece {
         board.getSquareFromName('d8').piece = rook
         newSquare.piece = this
         currentSquare.piece = null
-        board.renderSquares(currentSquare, newSquare, board.getSquareFromName('a8'), board.getSquareFromName('d8'))
+        board.renderSquaresAndUI(currentSquare, newSquare, board.getSquareFromName('a8'), board.getSquareFromName('d8'))
       }
     } else {
       newSquare.piece = this
       currentSquare.piece = null
-      board.renderSquares(currentSquare, newSquare)
+      board.renderSquaresAndUI(currentSquare, newSquare)
     }
   }
 
-  private aPieceThreatensThatSquare(board: Board, currentSquare: ISquare, newSquare: ISquare): boolean {
+  public aPieceThreatensThatSquare(board: Board, currentSquare: ISquare, newSquare: ISquare): boolean {
     const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
     const newSquareCoordinates = board.getSquareCoordinates(newSquare)
     const newSquarePiece = board.squares[newSquareCoordinates.row][newSquareCoordinates.column].piece
@@ -136,8 +158,14 @@ export default class King extends Piece {
       .filter((square) => square.piece && square.piece.color !== this.color && !(square.piece instanceof King))
       .map((square) => {
         return (
-          square.piece.getAllAvailableMoves(board, square).indexOf(newSquare) >= 0 &&
-          square.piece.isAllowedToMoveTo(square, newSquare, board)
+          square.piece
+            .getAllAvailableMoves(board, square)
+            .indexOf(board.squares[newSquareCoordinates.row][newSquareCoordinates.column]) >= 0 &&
+          square.piece.isAllowedToMoveTo(
+            square,
+            board.squares[newSquareCoordinates.row][newSquareCoordinates.column],
+            board
+          )
         )
       })
     const ennemyKingsSquare = board.getSquareCoordinates(

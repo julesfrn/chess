@@ -1,4 +1,5 @@
 import Board, { ISquare } from '../Board'
+import King from './King'
 
 export enum color {
   BLACK = 'black',
@@ -29,23 +30,16 @@ export default abstract class Piece {
 
   public move(board: Board, currentSquare: ISquare, newSquare: ISquare): void {
     this.hasMovedBefore = true
-    board.moveHistory.push(this.buildMoveName(currentSquare, newSquare))
     if (this.name === pieceName.PAWN || this.name === pieceName.KING) {
       this.moveSpecific(currentSquare, newSquare, board)
     } else {
       currentSquare.piece = null
       newSquare.piece = this
-      board.renderSquares(currentSquare, newSquare)
+      board.renderSquaresAndUI(currentSquare, newSquare)
     }
     board.turn = board.turn === color.WHITE ? color.BLACK : color.WHITE
     board.setSquareWithPawnsClickable()
     board.listenToClicks()
-  }
-
-  private buildMoveName(currentSquare: ISquare, newSquare: ISquare): string {
-    return newSquare.piece
-      ? `${this.name === pieceName.PAWN ? currentSquare.name[0] : this.name}x${newSquare.name}`
-      : `${this.name === pieceName.PAWN ? newSquare.name : this.name + newSquare.name}`
   }
 
   public getAllAvailableMoves(board: Board, currentSquare: ISquare): ISquare[] {
@@ -65,10 +59,20 @@ export default abstract class Piece {
   }
 
   public showAvailableMoves(board: Board, currentSquare: ISquare): void {
-    this.getAllAvailableMoves(board, currentSquare).forEach((square: ISquare) => {
-      document.getElementById(square.name).classList.add('canGoToThisSquare')
-      document.getElementById(square.name).setAttribute('clickable', '')
-    })
+    this.getAllAvailableMoves(board, currentSquare)
+      .filter(
+        (square) => {
+          if (this.name !== pieceName.KING) {
+            return !(board.getAllyKingSquare(this.color).piece as King).isGoingToBeInCheckAfterMove(currentSquare, square, board)
+          } else {
+            return true
+          }
+        }
+      )
+      .forEach((square: ISquare) => {
+        document.getElementById(square.name).classList.add('canGoToThisSquare')
+        document.getElementById(square.name).setAttribute('clickable', '')
+      })
     board.setSquareWithPawnsClickable()
     board.listenToClicks()
   }

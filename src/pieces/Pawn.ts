@@ -1,4 +1,5 @@
 import Board, { ISquare } from '../Board'
+import King from './King'
 import Piece, { color, pieceName } from './Piece'
 
 export default class Pawn extends Piece {
@@ -54,7 +55,7 @@ export default class Pawn extends Piece {
     const squares = [currentSquare, newSquare]
     if (rightSquare) squares.push(rightSquare)
     if (leftSquare) squares.push(leftSquare)
-    board.renderSquares(...squares)
+    board.renderSquaresAndUI(...squares)
   }
 
   public isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
