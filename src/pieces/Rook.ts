@@ -57,4 +57,6 @@ export default class Rook extends Piece {
     }
     return isAllowedToMoveTo
   }
+
+  public moveSpecific() {}
 }

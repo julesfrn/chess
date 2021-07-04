@@ -20,7 +20,7 @@ $ npm run dev
 - [x] Validation des mouvements de toutes les pièces
 - [x] Validation avancée des mouvements du roi: vérifier s'il sera menacé sur la case où il veut aller
 - [x] Prise en passant
-- [ ] Roque avec validation
+- [x] Roque avec validation
 - [ ] Échec et validation des mouvements pour défendre
 - [ ] Échec et mat
 - [ ] Ajouter Tensorflow

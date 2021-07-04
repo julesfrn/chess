@@ -27,4 +27,6 @@ export default class Knight extends Piece {
     if (newSquare.piece?.color === this.color) return false
     return true
   }
+
+  public moveSpecific() {}
 }

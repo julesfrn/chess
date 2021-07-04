@@ -21,6 +21,42 @@ export default class Pawn extends Piece {
       : 'https://images.chesscomfiles.com/chess-themes/pieces/tournament/150/bp.png'
   }
 
+  public moveSpecific(currentSquare: ISquare, newSquare: ISquare, board: Board) {
+    currentSquare.piece = null
+    newSquare.piece = this
+    const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
+    const newSquareCoordinates = board.getSquareCoordinates(newSquare)
+    const isNewSquareDiagonal: boolean = currentSquareCoordinates.column - newSquareCoordinates.column !== 0
+    const isGoingRight: boolean = currentSquareCoordinates.column - newSquareCoordinates.column === -1
+    const rightSquare = board.getSquareFromCoordinates({
+      ...currentSquareCoordinates,
+      column: currentSquareCoordinates.column + 1,
+    })
+    if (isNewSquareDiagonal && isGoingRight) {
+      if (rightSquare.piece && rightSquare.piece.color !== this.color && rightSquare.piece.isVulnerableToEnPassant)
+        rightSquare.piece = null
+    }
+    const isGoingLeft: boolean = currentSquareCoordinates.column - newSquareCoordinates.column === 1
+    const leftSquare = board.getSquareFromCoordinates({
+      ...currentSquareCoordinates,
+      column: currentSquareCoordinates.column - 1,
+    })
+    if (isNewSquareDiagonal && isGoingLeft) {
+      if (leftSquare.piece && leftSquare.piece.color !== this.color && leftSquare.piece.isVulnerableToEnPassant)
+        leftSquare.piece = null
+    }
+    board.deleteEnPassantVulnerabilities()
+    if (
+      this.name === pieceName.PAWN &&
+      [2, -2].includes(board.getSquareCoordinates(currentSquare).row - board.getSquareCoordinates(newSquare).row)
+    )
+      this.isVulnerableToEnPassant = true
+    const squares = [currentSquare, newSquare]
+    if (rightSquare) squares.push(rightSquare)
+    if (leftSquare) squares.push(leftSquare)
+    board.renderSquares(...squares)
+  }
+
   public isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean {
     const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
     const newSquareCoordinates = board.getSquareCoordinates(newSquare)
@@ -40,7 +76,8 @@ export default class Pawn extends Piece {
         ...currentSquareCoordinates,
         column: currentSquareCoordinates.column - 1,
       })
-      if (leftSquare.piece && leftSquare.piece.color !== this.color && leftSquare.piece.isVulnerableToEnPassant) return true
+      if (leftSquare.piece && leftSquare.piece.color !== this.color && leftSquare.piece.isVulnerableToEnPassant)
+        return true
     }
     if (isNewSquareDiagonal && (!newSquare.piece || newSquare.piece?.color === this.color)) return false
     const isNewSquare2SquaresAway: boolean =

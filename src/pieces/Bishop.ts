@@ -57,4 +57,6 @@ export default class Bishop extends Piece {
     }
     return isAllowedToMoveTo
   }
+
+  public moveSpecific() {}
 }

@@ -85,4 +85,6 @@ export default class Queen extends Piece {
     }
     return isAllowedToMoveTo
   }
+
+  public moveSpecific() {}
 }

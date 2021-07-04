@@ -21,42 +21,22 @@ export default abstract class Piece {
 
   public moves: [number, number][]
 
+  protected hasMovedBefore: boolean = false
+
   abstract get image(): string
 
   public isVulnerableToEnPassant?: boolean
 
   public move(board: Board, currentSquare: ISquare, newSquare: ISquare): void {
+    this.hasMovedBefore = true
     board.moveHistory.push(this.buildMoveName(currentSquare, newSquare))
-    currentSquare.piece = null
-    newSquare.piece = this
-    const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
-    const newSquareCoordinates = board.getSquareCoordinates(newSquare)
-    const isNewSquareDiagonal: boolean = currentSquareCoordinates.column - newSquareCoordinates.column !== 0
-    const isGoingRight: boolean = currentSquareCoordinates.column - newSquareCoordinates.column === -1
-    const rightSquare = board.getSquareFromCoordinates({
-      ...currentSquareCoordinates,
-      column: currentSquareCoordinates.column + 1,
-    })
-    if (isNewSquareDiagonal && isGoingRight) {
-      if (rightSquare.piece && rightSquare.piece.color !== this.color && rightSquare.piece.isVulnerableToEnPassant)
-        rightSquare.piece = null
+    if (this.name === pieceName.PAWN || this.name === pieceName.KING) {
+      this.moveSpecific(currentSquare, newSquare, board)
+    } else {
+      currentSquare.piece = null
+      newSquare.piece = this
+      board.renderSquares(currentSquare, newSquare)
     }
-    const isGoingLeft: boolean = currentSquareCoordinates.column - newSquareCoordinates.column === 1
-    const leftSquare = board.getSquareFromCoordinates({
-      ...currentSquareCoordinates,
-      column: currentSquareCoordinates.column - 1,
-    })
-    if (isNewSquareDiagonal && isGoingLeft) {
-      if (leftSquare.piece && leftSquare.piece.color !== this.color && leftSquare.piece.isVulnerableToEnPassant)
-        leftSquare.piece = null
-    }
-    board.deleteEnPassantVulnerabilities()
-    if (
-      this.name === pieceName.PAWN &&
-      [2, -2].includes(board.getSquareCoordinates(currentSquare).row - board.getSquareCoordinates(newSquare).row)
-    )
-      this.isVulnerableToEnPassant = true
-    board.renderSquares(currentSquare, newSquare, rightSquare, leftSquare)
     board.turn = board.turn === color.WHITE ? color.BLACK : color.WHITE
     board.setSquareWithPawnsClickable()
     board.listenToClicks()
@@ -92,6 +72,8 @@ export default abstract class Piece {
     board.setSquareWithPawnsClickable()
     board.listenToClicks()
   }
+
+  public abstract moveSpecific(currentSquare: ISquare, newSquare: ISquare, board: Board): void
 
   public abstract isAllowedToMoveTo(currentSquare: ISquare, newSquare: ISquare, board: Board): boolean
 }
