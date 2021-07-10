@@ -1,6 +1,6 @@
 import Board, { ISquare } from '../Board'
-import King from './King'
 import Piece, { color, pieceName } from './Piece'
+import Queen from './Queen'
 
 export default class Pawn extends Piece {
   constructor(color: color) {
@@ -25,6 +25,9 @@ export default class Pawn extends Piece {
   public moveSpecific(currentSquare: ISquare, newSquare: ISquare, board: Board) {
     currentSquare.piece = null
     newSquare.piece = this
+    if (newSquare.name[1] === '8' || newSquare.name[1] === '1') {
+      newSquare.piece = new Queen(this.color)
+    }
     const currentSquareCoordinates = board.getSquareCoordinates(currentSquare)
     const newSquareCoordinates = board.getSquareCoordinates(newSquare)
     const isNewSquareDiagonal: boolean = currentSquareCoordinates.column - newSquareCoordinates.column !== 0
