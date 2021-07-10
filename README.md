@@ -24,4 +24,6 @@ $ npm run dev
 - [x] Échec et validation des mouvements pour défendre
 - [x] Promotion
 - [x] Afficher l'échec et mat
+- [ ] nul par pat
+- [ ] nul par répétition
 - [ ] Ajouter Tensorflow
