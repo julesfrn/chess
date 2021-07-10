@@ -1,4 +1,4 @@
-import Piece, { color } from './pieces/Piece'
+import Piece, { color, pieceName } from './pieces/Piece'
 import defaultSquare from './defaultSquare'
 import Pawn from './pieces/Pawn'
 import King from './pieces/King'
@@ -173,5 +173,24 @@ export default class Board {
 
   getAllyKingSquare(allyColor: color): ISquare {
     return this.squares.flat().find((square) => square.piece?.color === allyColor && square.piece instanceof King)
+  }
+
+  displayCheckMateIfCheckMate(): void {
+    const availableMoves = this.squares.flat().filter(square => square.piece?.color === this.turn).map(square => {
+      return square.piece.getAllAvailableMoves(this, square).filter(
+        (newSquare) => {
+          if (square.piece.name !== pieceName.KING) {
+            return !(this.getAllyKingSquare(square.piece.color).piece as King).isGoingToBeInCheckAfterMove(square, newSquare, this)
+          } else {
+            return true
+          }
+        }
+      )
+    }).flat()
+    console.log(availableMoves)
+    if (availableMoves.length < 1) {
+      document.querySelector('#board').classList.add('winningScreen')
+      document.querySelector('#board').innerHTML = `<h1>${this.turn === color.WHITE ? color.BLACK : color.WHITE} won the game</h1>`
+    }
   }
 }

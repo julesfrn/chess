@@ -23,5 +23,5 @@ $ npm run dev
 - [x] Roque avec validation
 - [x] Échec et validation des mouvements pour défendre
 - [x] Promotion
-- [ ] Afficher l'échec et mat
+- [x] Afficher l'échec et mat
 - [ ] Ajouter Tensorflow

@@ -38,6 +38,7 @@ export default abstract class Piece {
       board.renderSquaresAndUI(currentSquare, newSquare)
     }
     board.turn = board.turn === color.WHITE ? color.BLACK : color.WHITE
+    board.displayCheckMateIfCheckMate()
     board.setSquareWithPawnsClickable()
     board.listenToClicks()
   }
