@@ -1,5 +1,5 @@
 # Chess game with TypeScript
-A small chess game coded with TypeScript. The goal is to add an AI with TensorFlow and make it learn how to play chess and being good at it.
+A small chess game coded with TypeScript.
 
 ## Run the app
 1. build the app:
