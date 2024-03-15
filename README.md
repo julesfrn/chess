@@ -26,4 +26,3 @@ $ npm run dev
 - [x] Afficher l'échec et mat
 - [ ] nul par pat
 - [ ] nul par répétition
-- [ ] Ajouter Tensorflow
